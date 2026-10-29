@@ -1,0 +1,64 @@
+---
+layout: default
+---
+{%- comment -%}
+  minima's home layout, except that posts with a `series:` are listed once
+  per series, at the newest part's place, with all parts in order of `part:`.
+{%- endcomment -%}
+
+<div class="home">
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  {{ content }}
+
+  {%- if site.posts.size > 0 -%}
+    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <ul class="post-list">
+      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+      {%- assign listed = "|" -%}
+      {%- for post in site.posts -%}
+      {%- if post.series -%}
+        {%- capture key -%}|{{ post.series }}|{%- endcapture -%}
+        {%- if listed contains key -%}{%- continue -%}{%- endif -%}
+        {%- assign listed = listed | append: post.series | append: "|" -%}
+        {%- assign parts = site.posts | where: "series", post.series | sort: "part" -%}
+        {%- assign first = parts | first -%}
+        {%- assign series = site.data.series[post.series] -%}
+      <li class="series">
+        <span class="post-meta">{{ post.date | date: date_format }} · series in {{ parts.size }} parts</span>
+        <h3>
+          <a class="post-link" href="{{ first.url | relative_url }}">
+            {{ series.title | default: post.series | escape }}
+          </a>
+        </h3>
+        {%- if first.description -%}
+        <p>{{ first.description | escape }}</p>
+        {%- endif -%}
+        <ol class="series-parts">
+          {%- for part in parts -%}
+          <li><span class="part-number">Part {{ part.part }}</span> <a href="{{ part.url | relative_url }}">{{ part.title | escape }}</a></li>
+          {%- endfor -%}
+        </ol>
+      </li>
+      {%- else -%}
+      <li>
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+        {%- if site.show_excerpts -%}
+          {{ post.excerpt }}
+        {%- endif -%}
+      </li>
+      {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+  {%- endif -%}
+
+</div>

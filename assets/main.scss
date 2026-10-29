@@ -1,0 +1,39 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import "minima";
+
+// Widen the footer's social column so "@ThePartsBinChannel" and its icon fit
+// on one line. Only above minima's laptop breakpoint; narrower layouts
+// already give the column 50% or the full width.
+@media screen and (min-width: #{$on-laptop + 1px}) {
+  .footer-col-2 {
+    width: calc(30% - (#{$spacing-unit} / 2));
+  }
+
+  .footer-col-3 {
+    width: calc(35% - (#{$spacing-unit} / 2));
+  }
+}
+
+.social-media-list li {
+  white-space: nowrap;
+}
+
+// A series on the home page: its parts as a list under the series title.
+.series-parts {
+  list-style: none;
+  margin-left: 0;
+
+  li {
+    margin-bottom: $spacing-unit / 4;
+  }
+}
+
+.part-number {
+  display: inline-block;
+  min-width: 4em;
+  color: $grey-color;
+  font-size: $small-font-size;
+}

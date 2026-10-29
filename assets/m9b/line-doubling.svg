@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram" width="680" height="230" viewBox="0 0 680 230">
+  <title>Five game lines become twelve screen lines</title>
+<style>
+svg {
+  --bg: #fdfdfd;
+  --bg2: #f2f0ea;
+  --fg: #1b1d22;
+  --fg2: #4a4f5a;
+  --muted: #7a7f8a;
+  --rule: #dcd8ce;
+  --accent: #b4451f;
+  --link: #1f5fa8;
+  --code-bg: #efece4;
+
+  /* clock domains and memories, used by the diagrams */
+  --c-cpu: #2f62b0;
+  --c-sys: #2b8a4e;
+  --c-pix: #7048b8;
+  --c-usb: #b07a12;
+  --c-osc: #6b6f78;
+  --c-ram: #c99a06;
+  --c-ext: #a8452a;
+  --fill-cpu: #e8effa;
+  --fill-sys: #e6f4eb;
+  --fill-pix: #efe9f9;
+  --fill-usb: #f8f0dd;
+  --fill-ram: #fff3c4;
+  --fill-ext: #f9e6df;
+  --fill-box: #ffffff;
+}
+.diagram text { font-family: 'IBM Plex Sans', system-ui, sans-serif; fill: var(--fg); }
+.diagram .mono { font-family: 'IBM Plex Mono', monospace; }
+.diagram .t-title { font-weight: 600; font-size: 14px; }
+.diagram .t-sub { font-size: 11.5px; fill: var(--fg2); }
+.diagram .t-small { font-size: 10.5px; fill: var(--muted); }
+.diagram .t-freq { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; }
+.diagram .box { fill: var(--fill-box); stroke: var(--fg2); stroke-width: 1.2; }
+.diagram .ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.2; }
+.diagram .ext { fill: var(--fill-ext); stroke: var(--c-ext); stroke-width: 1.2; }
+.diagram .wire { stroke: var(--fg2); stroke-width: 1.6; fill: none; }
+.diagram .wire.thick { stroke-width: 3; }
+.diagram .arrowhead { fill: var(--fg2); }
+.diagram .dom { stroke-width: 1.6; stroke-dasharray: 6 4; }
+.diagram .d-cpu { fill: var(--fill-cpu); stroke: var(--c-cpu); }
+.diagram .d-sys { fill: var(--fill-sys); stroke: var(--c-sys); }
+.diagram .d-pix { fill: var(--fill-pix); stroke: var(--c-pix); }
+.diagram .d-usb { fill: var(--fill-usb); stroke: var(--c-usb); }
+.diagram .d-osc { fill: var(--bg2); stroke: var(--c-osc); }
+.diagram .k-cpu { fill: var(--c-cpu); }
+.diagram .k-sys { fill: var(--c-sys); }
+.diagram .k-pix { fill: var(--c-pix); }
+.diagram .k-usb { fill: var(--c-usb); }
+.diagram .k-osc { fill: var(--c-osc); }
+.diagram .s-cpu { stroke: var(--c-cpu); }
+.diagram .s-sys { stroke: var(--c-sys); }
+.diagram .s-pix { stroke: var(--c-pix); }
+.diagram .s-usb { stroke: var(--c-usb); }
+.diagram .s-osc { stroke: var(--c-osc); }
+.diagram .pkg { fill: var(--bg2); stroke: var(--fg2); stroke-width: 1.5; }
+.diagram .die { fill: var(--fill-box); stroke: var(--fg); stroke-width: 1.4; }
+.diagram .die-ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.4; }
+.diagram .bar { fill: var(--accent); }
+.diagram .bar2 { fill: var(--fg2); opacity: 0.35; }
+.diagram .grid { stroke: var(--rule); stroke-width: 1; }
+</style>
+  <text x="20" y="22" class="t-sub">game lines (PSRAM)</text>
+  <text x="400" y="22" class="t-sub">screen lines (line table)</text>
+  <g>
+    <rect x="20" y="34" width="160" height="30" class="ram"/><text x="100" y="54" text-anchor="middle" class="t-small" style="fill: var(--fg)">0</text>
+    <rect x="20" y="70" width="160" height="30" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/><text x="100" y="90" text-anchor="middle" class="t-small" style="fill: var(--fg)">1</text>
+    <rect x="20" y="106" width="160" height="30" class="ram"/><text x="100" y="126" text-anchor="middle" class="t-small" style="fill: var(--fg)">2</text>
+    <rect x="20" y="142" width="160" height="30" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/><text x="100" y="162" text-anchor="middle" class="t-small" style="fill: var(--fg)">3</text>
+    <rect x="20" y="178" width="160" height="30" class="ram"/><text x="100" y="198" text-anchor="middle" class="t-small" style="fill: var(--fg)">4</text>
+  </g>
+  <!-- 12 screen lines, 14.5 px each from y=34 -->
+  <g>
+    <rect x="400" y="34" width="260" height="13" class="ram"/><rect x="400" y="49" width="260" height="13" class="ram"/>
+    <rect x="400" y="64" width="260" height="13" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/><rect x="400" y="79" width="260" height="13" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/><rect x="400" y="94" width="260" height="13" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/>
+    <rect x="400" y="109" width="260" height="13" class="ram"/><rect x="400" y="124" width="260" height="13" class="ram"/>
+    <rect x="400" y="139" width="260" height="13" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/><rect x="400" y="154" width="260" height="13" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/><rect x="400" y="169" width="260" height="13" class="box" style="fill: var(--fill-pix); stroke: var(--c-pix)"/>
+    <rect x="400" y="184" width="260" height="13" class="ram"/><rect x="400" y="199" width="260" height="13" class="ram"/>
+  </g>
+  <g class="wire" style="stroke-width: 1">
+    <line x1="180" y1="49" x2="400" y2="48"/>
+    <line x1="180" y1="85" x2="400" y2="85"/>
+    <line x1="180" y1="121" x2="400" y2="123"/>
+    <line x1="180" y1="157" x2="400" y2="160"/>
+    <line x1="180" y1="193" x2="400" y2="198"/>
+  </g>
+  <g class="t-freq" style="font-size: 11px">
+    <text x="666" y="54">×2</text><text x="666" y="89">×3</text><text x="666" y="127">×2</text><text x="666" y="164">×3</text><text x="666" y="202">×2</text>
+  </g>
+</svg>

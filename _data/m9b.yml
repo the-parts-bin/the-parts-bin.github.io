@@ -1,0 +1,20 @@
+# The m9b series, in reading order: drives the series bar and the pager in
+# _layouts/m9b.html. Titles match each post's title.
+- url: /m9b/
+  short: Overview
+  title: A retro-style computer on a Tang Nano 9K
+- url: /m9b/cpu/
+  short: CPU
+  title: "The CPU: VexiiRiscv, cut to fit"
+- url: /m9b/psram/
+  short: PSRAM
+  title: Two PSRAM dies, one memory
+- url: /m9b/hdmi/
+  short: HDMI
+  title: Picture and sound over HDMI
+- url: /m9b/usb/
+  short: USB
+  title: Two USB ports, one engine
+- url: /m9b/games/
+  short: Games
+  title: "Re-retro: five games on 36 MHz"

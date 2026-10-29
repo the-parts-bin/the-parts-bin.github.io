@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body>
+
+    {%- include header.html -%}
+
+    {%- assign parts = site.data.m9b -%}
+    {%- assign here = page.part | minus: 1 -%}
+    <div class="m9b">
+      <nav class="m9b-series" aria-label="m9b series">
+        <div class="inner">
+          <a class="brand" href="{{ parts[0].url | relative_url }}">m9b</a>
+          <ol class="parts">
+            {%- for p in parts -%}
+            <li><a href="{{ p.url | relative_url }}"{% if forloop.index0 == here %} aria-current="page"{% endif %}><span class="num">{{ forloop.index }}</span>{{ p.short }}</a></li>
+            {%- endfor -%}
+          </ol>
+        </div>
+      </nav>
+
+      <main class="m9b-main" aria-label="Content">
+        <p class="kicker">m9b · part {{ page.part }} of {{ parts.size }}</p>
+        <h1>{{ page.title | escape }}</h1>
+
+        {{ content }}
+
+        {%- assign prev = here | minus: 1 -%}
+        {%- assign next = here | plus: 1 -%}
+        <nav class="pager" aria-label="Series">
+          {%- if here > 0 -%}
+          <a class="prev" href="{{ parts[prev].url | relative_url }}"><small>Previous</small>{{ parts[prev].title }}</a>
+          {%- else -%}<span></span>{%- endif -%}
+          {%- if next < parts.size -%}
+          <a class="next" href="{{ parts[next].url | relative_url }}"><small>Next</small>{{ parts[next].title }}</a>
+          {%- else -%}<span></span>{%- endif -%}
+        </nav>
+
+      </main>
+    </div>
+
+    {%- include footer.html -%}
+
+    <script src="{{ "/assets/js/m9b.js" | relative_url }}" defer></script>
+  </body>
+
+</html>

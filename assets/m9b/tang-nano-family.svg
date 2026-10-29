@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram" width="900" height="310" viewBox="0 0 900 310">
+        <title>The four Tang Nano boards drawn as squares whose area is their number of lookup tables, each with the RAM in its package</title>
+<style>
+svg {
+  --bg: #fdfdfd;
+  --bg2: #f2f0ea;
+  --fg: #1b1d22;
+  --fg2: #4a4f5a;
+  --muted: #7a7f8a;
+  --rule: #dcd8ce;
+  --accent: #b4451f;
+  --link: #1f5fa8;
+  --code-bg: #efece4;
+
+  /* clock domains and memories, used by the diagrams */
+  --c-cpu: #2f62b0;
+  --c-sys: #2b8a4e;
+  --c-pix: #7048b8;
+  --c-usb: #b07a12;
+  --c-osc: #6b6f78;
+  --c-ram: #c99a06;
+  --c-ext: #a8452a;
+  --fill-cpu: #e8effa;
+  --fill-sys: #e6f4eb;
+  --fill-pix: #efe9f9;
+  --fill-usb: #f8f0dd;
+  --fill-ram: #fff3c4;
+  --fill-ext: #f9e6df;
+  --fill-box: #ffffff;
+}
+.diagram text { font-family: 'IBM Plex Sans', system-ui, sans-serif; fill: var(--fg); }
+.diagram .mono { font-family: 'IBM Plex Mono', monospace; }
+.diagram .t-title { font-weight: 600; font-size: 14px; }
+.diagram .t-sub { font-size: 11.5px; fill: var(--fg2); }
+.diagram .t-small { font-size: 10.5px; fill: var(--muted); }
+.diagram .t-freq { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; }
+.diagram .box { fill: var(--fill-box); stroke: var(--fg2); stroke-width: 1.2; }
+.diagram .ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.2; }
+.diagram .ext { fill: var(--fill-ext); stroke: var(--c-ext); stroke-width: 1.2; }
+.diagram .wire { stroke: var(--fg2); stroke-width: 1.6; fill: none; }
+.diagram .wire.thick { stroke-width: 3; }
+.diagram .arrowhead { fill: var(--fg2); }
+.diagram .dom { stroke-width: 1.6; stroke-dasharray: 6 4; }
+.diagram .d-cpu { fill: var(--fill-cpu); stroke: var(--c-cpu); }
+.diagram .d-sys { fill: var(--fill-sys); stroke: var(--c-sys); }
+.diagram .d-pix { fill: var(--fill-pix); stroke: var(--c-pix); }
+.diagram .d-usb { fill: var(--fill-usb); stroke: var(--c-usb); }
+.diagram .d-osc { fill: var(--bg2); stroke: var(--c-osc); }
+.diagram .k-cpu { fill: var(--c-cpu); }
+.diagram .k-sys { fill: var(--c-sys); }
+.diagram .k-pix { fill: var(--c-pix); }
+.diagram .k-usb { fill: var(--c-usb); }
+.diagram .k-osc { fill: var(--c-osc); }
+.diagram .s-cpu { stroke: var(--c-cpu); }
+.diagram .s-sys { stroke: var(--c-sys); }
+.diagram .s-pix { stroke: var(--c-pix); }
+.diagram .s-usb { stroke: var(--c-usb); }
+.diagram .s-osc { stroke: var(--c-osc); }
+.diagram .pkg { fill: var(--bg2); stroke: var(--fg2); stroke-width: 1.5; }
+.diagram .die { fill: var(--fill-box); stroke: var(--fg); stroke-width: 1.4; }
+.diagram .die-ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.4; }
+.diagram .bar { fill: var(--accent); }
+.diagram .bar2 { fill: var(--fg2); opacity: 0.35; }
+.diagram .grid { stroke: var(--rule); stroke-width: 1; }
+</style>
+        <defs>
+          <pattern id="fam-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6" style="stroke: var(--fg2); stroke-width: 1.5; opacity: .55" />
+          </pattern>
+        </defs>
+        <line class="grid" x1="20" y1="230" x2="880" y2="230" />
+        <!-- side = 1.389 * sqrt(LUT4); RAM boxes 44 x 64, the same for every board -->
+        <rect x="50" y="183" width="47" height="47" class="box" />
+        <text x="73" y="252" text-anchor="middle" class="t-title">1K</text>
+        <text x="73" y="270" text-anchor="middle" class="t-sub mono">1,152</text>
+        <text x="73" y="288" text-anchor="middle" class="t-small">no RAM</text>
+
+        <rect x="190" y="136" width="94" height="94" class="box" />
+        <rect x="190" y="100" width="94" height="28" rx="3" fill="url(#fam-hatch)" style="stroke: var(--fg2)" />
+        <text x="237" y="93" text-anchor="middle" class="t-small" style="fill: var(--fg)">+ Cortex-M3</text>
+        <rect x="292" y="166" width="44" height="64" class="die-ram" />
+        <text x="314" y="202" text-anchor="middle" class="t-small" style="fill: var(--fg)">8 MB</text>
+        <text x="237" y="252" text-anchor="middle" class="t-title">4K</text>
+        <text x="237" y="270" text-anchor="middle" class="t-sub mono">4,608 + hard CPU</text>
+        <text x="237" y="288" text-anchor="middle" class="t-small">+ 8 MB DDR HyperRAM</text>
+
+        <rect x="385" y="101" width="129" height="129"
+          style="fill: color-mix(in srgb, var(--accent) 18%, var(--fill-box)); stroke: var(--accent); stroke-width: 2" />
+        <text x="449" y="170" text-anchor="middle" class="t-title" style="fill: var(--accent)">our target</text>
+        <rect x="522" y="166" width="44" height="32" class="die-ram" />
+        <rect x="522" y="198" width="44" height="32" class="die-ram" />
+        <text x="544" y="186" text-anchor="middle" class="t-small" style="fill: var(--fg)">4 MB</text>
+        <text x="544" y="218" text-anchor="middle" class="t-small" style="fill: var(--fg)">4 MB</text>
+        <text x="449" y="252" text-anchor="middle" class="t-title">9K</text>
+        <text x="449" y="270" text-anchor="middle" class="t-sub mono">8,640</text>
+        <text x="449" y="288" text-anchor="middle" class="t-small">+ 2 × 4 MB DDR PSRAM</text>
+
+        <rect x="620" y="30" width="200" height="200" class="box" />
+        <rect x="828" y="166" width="44" height="64" class="die-ram" />
+        <text x="850" y="202" text-anchor="middle" class="t-small" style="fill: var(--fg)">8 MB</text>
+        <text x="720" y="252" text-anchor="middle" class="t-title">20K</text>
+        <text x="720" y="270" text-anchor="middle" class="t-sub mono">20,736</text>
+        <text x="720" y="288" text-anchor="middle" class="t-small">+ 8 MB SDR SDRAM</text>
+      </svg>

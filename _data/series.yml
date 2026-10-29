@@ -1,0 +1,4 @@
+# Post series, keyed by the posts' `series:`. The home page lists a series
+# once, at its newest part, with its parts in order of `part:`.
+m9b:
+  title: "m9b: a retro-style computer on a Tang Nano 9K"

@@ -1,0 +1,40 @@
+# Site settings, available in templates as {{ site.title }} etc.
+title: The Parts Bin
+description: >-
+  Projects, builds and experiments from The Parts Bin.
+url: "https://the-parts-bin.github.io"
+baseurl: ""
+
+author: The Parts Bin
+
+# Used by minima for the footer social links.
+github_username: the-parts-bin
+youtube_username: "@ThePartsBinChannel"
+
+# Build settings
+theme: minima
+markdown: kramdown
+kramdown:
+  input: GFM
+permalink: /:year/:month/:day/:title/
+timezone: Europe/Zurich
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - README.md
+  - Makefile
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .bundle/

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram" width="640" height="330" viewBox="0 0 640 330">
+        <title>The GW1NR-9 package: the FPGA die and two PSRAM dies, each on its own bus</title>
+<style>
+svg {
+  --bg: #fdfdfd;
+  --bg2: #f2f0ea;
+  --fg: #1b1d22;
+  --fg2: #4a4f5a;
+  --muted: #7a7f8a;
+  --rule: #dcd8ce;
+  --accent: #b4451f;
+  --link: #1f5fa8;
+  --code-bg: #efece4;
+
+  /* clock domains and memories, used by the diagrams */
+  --c-cpu: #2f62b0;
+  --c-sys: #2b8a4e;
+  --c-pix: #7048b8;
+  --c-usb: #b07a12;
+  --c-osc: #6b6f78;
+  --c-ram: #c99a06;
+  --c-ext: #a8452a;
+  --fill-cpu: #e8effa;
+  --fill-sys: #e6f4eb;
+  --fill-pix: #efe9f9;
+  --fill-usb: #f8f0dd;
+  --fill-ram: #fff3c4;
+  --fill-ext: #f9e6df;
+  --fill-box: #ffffff;
+}
+.diagram text { font-family: 'IBM Plex Sans', system-ui, sans-serif; fill: var(--fg); }
+.diagram .mono { font-family: 'IBM Plex Mono', monospace; }
+.diagram .t-title { font-weight: 600; font-size: 14px; }
+.diagram .t-sub { font-size: 11.5px; fill: var(--fg2); }
+.diagram .t-small { font-size: 10.5px; fill: var(--muted); }
+.diagram .t-freq { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; }
+.diagram .box { fill: var(--fill-box); stroke: var(--fg2); stroke-width: 1.2; }
+.diagram .ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.2; }
+.diagram .ext { fill: var(--fill-ext); stroke: var(--c-ext); stroke-width: 1.2; }
+.diagram .wire { stroke: var(--fg2); stroke-width: 1.6; fill: none; }
+.diagram .wire.thick { stroke-width: 3; }
+.diagram .arrowhead { fill: var(--fg2); }
+.diagram .dom { stroke-width: 1.6; stroke-dasharray: 6 4; }
+.diagram .d-cpu { fill: var(--fill-cpu); stroke: var(--c-cpu); }
+.diagram .d-sys { fill: var(--fill-sys); stroke: var(--c-sys); }
+.diagram .d-pix { fill: var(--fill-pix); stroke: var(--c-pix); }
+.diagram .d-usb { fill: var(--fill-usb); stroke: var(--c-usb); }
+.diagram .d-osc { fill: var(--bg2); stroke: var(--c-osc); }
+.diagram .k-cpu { fill: var(--c-cpu); }
+.diagram .k-sys { fill: var(--c-sys); }
+.diagram .k-pix { fill: var(--c-pix); }
+.diagram .k-usb { fill: var(--c-usb); }
+.diagram .k-osc { fill: var(--c-osc); }
+.diagram .s-cpu { stroke: var(--c-cpu); }
+.diagram .s-sys { stroke: var(--c-sys); }
+.diagram .s-pix { stroke: var(--c-pix); }
+.diagram .s-usb { stroke: var(--c-usb); }
+.diagram .s-osc { stroke: var(--c-osc); }
+.diagram .pkg { fill: var(--bg2); stroke: var(--fg2); stroke-width: 1.5; }
+.diagram .die { fill: var(--fill-box); stroke: var(--fg); stroke-width: 1.4; }
+.diagram .die-ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.4; }
+.diagram .bar { fill: var(--accent); }
+.diagram .bar2 { fill: var(--fg2); opacity: 0.35; }
+.diagram .grid { stroke: var(--rule); stroke-width: 1; }
+</style>
+        <rect x="10" y="10" width="620" height="310" rx="14" class="pkg" />
+        <text x="28" y="36" class="t-title">GW1NR-LV9 package (QFN88)</text>
+
+        <rect x="40" y="60" width="290" height="230" rx="4" class="die" />
+        <text x="185" y="98" text-anchor="middle" class="t-title">FPGA die</text>
+        <text x="185" y="128" text-anchor="middle" class="t-sub mono">8,640 LUT4 · 6,480 FF</text>
+        <text x="185" y="148" text-anchor="middle" class="t-sub mono">26 × 2 KB block RAM</text>
+        <text x="185" y="168" text-anchor="middle" class="t-sub mono">76 KB user flash</text>
+        <text x="185" y="188" text-anchor="middle" class="t-sub mono">2 PLLs · hard multipliers</text>
+        <text x="185" y="208" text-anchor="middle" class="t-sub mono">configuration flash</text>
+        <text x="185" y="262" text-anchor="middle" class="t-small">71 user I/O pins out to the board</text>
+
+        <rect x="450" y="60" width="150" height="100" rx="4" class="die-ram" />
+        <text x="525" y="98" text-anchor="middle" class="t-title">PSRAM 0</text>
+        <text x="525" y="120" text-anchor="middle" class="t-sub mono">32 Mbit · 4 MB</text>
+
+        <rect x="450" y="190" width="150" height="100" rx="4" class="die-ram" />
+        <text x="525" y="228" text-anchor="middle" class="t-title">PSRAM 1</text>
+        <text x="525" y="250" text-anchor="middle" class="t-sub mono">32 Mbit · 4 MB</text>
+
+        <g class="wire">
+          <line x1="330" y1="95" x2="450" y2="95" />
+          <line x1="330" y1="110" x2="450" y2="110" />
+          <line x1="330" y1="125" x2="450" y2="125" />
+          <line x1="330" y1="225" x2="450" y2="225" />
+          <line x1="330" y1="240" x2="450" y2="240" />
+          <line x1="330" y1="255" x2="450" y2="255" />
+        </g>
+        <text x="390" y="86" text-anchor="middle" class="t-small">DQ[7:0], RWDS</text>
+        <text x="390" y="142" text-anchor="middle" class="t-small">CK, CS#</text>
+        <text x="390" y="216" text-anchor="middle" class="t-small">DQ[7:0], RWDS</text>
+        <text x="390" y="272" text-anchor="middle" class="t-small">CK, CS#</text>
+        <text x="390" y="178" text-anchor="middle" class="t-freq">≤ 166 MHz DDR</text>
+      </svg>
