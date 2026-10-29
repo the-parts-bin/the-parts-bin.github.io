@@ -8,10 +8,18 @@ for (const fig of document.querySelectorAll('figure.short')) {
     fig.classList.add('pending');
     continue;
   }
-  // The portrait poster can be missing for a while after upload; the
-  // landscape one behind it is always there.
-  frame.style.backgroundImage =
-    `url(https://i.ytimg.com/vi/${id}/oardefault.jpg), url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)`;
+  // The portrait poster can be missing for a while after upload, and then
+  // YouTube answers with a 120x90 grey placeholder (status 404, but still
+  // an image). Show the landscape poster, and switch to the portrait one
+  // only if it really is portrait.
+  const poster = (name) => `url(https://i.ytimg.com/vi/${id}/${name}.jpg)`;
+  frame.style.backgroundImage = poster('hqdefault');
+  const portrait = new Image();
+  portrait.onload = () => {
+    if (portrait.naturalHeight > portrait.naturalWidth && !frame.querySelector('iframe'))
+      frame.style.backgroundImage = poster('oardefault');
+  };
+  portrait.src = `https://i.ytimg.com/vi/${id}/oardefault.jpg`;
   const play = document.createElement('button');
   play.className = 'play';
   play.setAttribute('aria-label', 'Play the short');
