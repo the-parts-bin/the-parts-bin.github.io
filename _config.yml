@@ -11,6 +11,10 @@ author: The Parts Bin
 github_username: the-parts-bin
 youtube_username: "@ThePartsBinChannel"
 
+# GoatCounter site code: page views at https://thepartsbin.goatcounter.com.
+# Only production builds (GitHub Pages) load the counter, not make serve.
+goatcounter: thepartsbin
+
 # Build settings
 theme: minima
 markdown: kramdown
