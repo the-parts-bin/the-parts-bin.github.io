@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CyberDoom Installer</title>
+<style>
+  :root {
+    --bg: #f4f2ee;
+    --panel: #ffffff;
+    --text: #1d1b19;
+    --muted: #6b655e;
+    --line: #ddd7cf;
+    --accent: #b3261e;
+    --accent-text: #ffffff;
+    --ok: #2e7d32;
+    --warn: #a15c00;
+    --log-bg: #f0ede8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151312;
+      --panel: #1f1c1a;
+      --text: #ece7e1;
+      --muted: #a39b92;
+      --line: #36312d;
+      --accent: #e5483d;
+      --accent-text: #ffffff;
+      --ok: #7bc47f;
+      --warn: #f0b35a;
+      --log-bg: #191715;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151312;
+    --panel: #1f1c1a;
+    --text: #ece7e1;
+    --muted: #a39b92;
+    --line: #36312d;
+    --accent: #e5483d;
+    --accent-text: #ffffff;
+    --ok: #7bc47f;
+    --warn: #f0b35a;
+    --log-bg: #191715;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 28px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 18px; margin: 0 0 6px; }
+  p { margin: 0 0 12px; }
+  .lede { color: var(--muted); margin-bottom: 24px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    margin-bottom: 16px;
+  }
+  .step { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+  button {
+    font: inherit;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+  }
+  button.secondary { background: transparent; color: var(--accent); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  label { display: block; margin: 8px 0; }
+  input[type="file"] { max-width: 100%; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 10px; }
+  .note { font-size: 14px; color: var(--muted); }
+  .warn { color: var(--warn); }
+  .ok { color: var(--ok); }
+  a { color: var(--accent); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+  #unsupported { display: none; border-color: var(--warn); }
+  progress { width: 100%; height: 14px; accent-color: var(--accent); }
+  #status { font-weight: 600; margin: 6px 0; min-height: 1.5em; }
+  #log {
+    background: var(--log-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    height: 180px;
+    overflow: auto;
+    font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: pre-wrap;
+    margin: 0;
+  }
+  details summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CyberDoom Installer</h1>
+  <p class="lede">Back up, install and restore Doom on a Makeblock CyberPi from the browser.
+    Uses Web Serial: Chrome or Edge on a computer. Connect the CyberPi with USB first.</p>
+
+  <div class="card" id="unsupported">
+    <h2 class="warn">This browser can't talk to serial ports</h2>
+    <p>Use Chrome or Edge on Windows, macOS, Linux or ChromeOS. Or flash with esptool as described in the
+      <a href="https://github.com/the-parts-bin/cyberpi-doom#install-the-prebuilt-image">README</a>.</p>
+  </div>
+
+  <div class="card">
+    <div class="step">Step 1</div>
+    <h2>Back up the CyberPi</h2>
+    <p>Saves the whole 8 MB flash, including Makeblock's firmware, so the CyberPi can be put back exactly as it
+      was. Takes about four minutes. Keep the file: it belongs to this CyberPi only.</p>
+    <div class="row"><button id="backup">Back up</button></div>
+  </div>
+
+  <div class="card">
+    <div class="step">Step 2</div>
+    <h2>Install Doom</h2>
+    <p id="fw-info" class="note">Looking for the latest firmware…</p>
+    <label>Doom shareware WAD (<code>doom1.wad</code>, v1.9):
+      <input type="file" id="wad" accept=".wad,.WAD"></label>
+    <label><input type="checkbox" id="skip-wad"> Doom is already on this CyberPi: only update the firmware
+      (keeps the WAD, saves and settings)</label>
+    <p id="wad-info" class="note"></p>
+    <details>
+      <summary>Use a firmware file instead</summary>
+      <label>Firmware image (<code>cyberdoom-*.bin</code>):
+        <input type="file" id="fw-file" accept=".bin"></label>
+    </details>
+    <div class="row"><button id="install" disabled>Install</button></div>
+  </div>
+
+  <div class="card">
+    <div class="step">Any time</div>
+    <h2>Restore a backup</h2>
+    <p>Writes a backup made in step 1 back to the CyberPi. This replaces Doom and its saves.</p>
+    <label>Backup file: <input type="file" id="restore-file" accept=".bin"></label>
+    <div class="row"><button id="restore" class="secondary" disabled>Restore</button></div>
+  </div>
+
+  <div class="card">
+    <div id="status">Ready.</div>
+    <progress id="progress" max="1" value="0"></progress>
+    <pre id="log"></pre>
+    <p class="note" style="margin-top:10px">If connecting fails, unplug and replug the CyberPi and try again.
+      Only one program can use the port at a time.</p>
+  </div>
+
+  <p class="note">The WAD isn't included: get the shareware <code>doom1.wad</code> v1.9 (4,196,020 bytes) e.g. from
+    a Linux distribution's <code>doom-shareware</code> package. Source and details:
+    <a href="https://github.com/the-parts-bin/cyberpi-doom">github.com/the-parts-bin/cyberpi-doom</a>.
+    About the port: <a href="/2026/11/12/cyberpi-doom/">Doom on a Makeblock CyberPi</a>.</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+<script type="module">
+import { ESPLoader, Transport } from "https://cdn.jsdelivr.net/npm/esptool-js@0.7.0/bundle.js";
+
+const FLASH_SIZE = 8 * 1024 * 1024;
+const WAD_ADDR = 0x200000;
+const WAD_MAX = 0x410000;                 // size of the wad partition
+const WAD_MD5 = "f0cefca49926d00903cf57551d901abe";
+const BAUD = 460800;                      // the CyberPi's CH340 corrupts data at 921600
+const READ_CHUNK = 256 * 1024;
+const READ_PACKET = 4096;
+const READ_IN_FLIGHT = 16;                // 64 KB, well within the serial buffer
+const READ_TIMEOUT_MS = 3000;
+const READ_RETRIES = 5;
+const CH340 = { usbVendorId: 0x1a86 };
+
+const $ = (id) => document.getElementById(id);
+const logEl = $("log"), statusEl = $("status"), progressEl = $("progress");
+let firmware = null;      // { name, data }
+let wad = null;           // Uint8Array
+let busy = false;
+
+function log(line) {
+  logEl.textContent += line + "\n";
+  logEl.scrollTop = logEl.scrollHeight;
+}
+function status(text, cls) {
+  statusEl.textContent = text;
+  statusEl.className = cls || "";
+}
+function progress(done, total) {
+  progressEl.max = total || 1;
+  progressEl.value = done;
+}
+const md5 = (data) => SparkMD5.ArrayBuffer.hash(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
+const readFile = async (input) => new Uint8Array(await input.files[0].arrayBuffer());
+
+const terminal = {
+  clean() {},
+  writeLine(data) { log(data); },
+  write(data) { log(data); },
+};
+
+function updateButtons() {
+  const haveWad = $("skip-wad").checked || wad;
+  $("install").disabled = busy || !firmware || !haveWad;
+  $("restore").disabled = busy || !$("restore-file").files.length;
+  $("backup").disabled = busy;
+}
+
+// Connects to the CyberPi and runs fn(session); always releases the port.
+async function withBoard(title, fn) {
+  if (busy) return;
+  let port;
+  try {
+    port = await navigator.serial.requestPort({ filters: [CH340] });
+  } catch {
+    return; // chooser cancelled
+  }
+  busy = true;
+  updateButtons();
+  progress(0, 1);
+  logEl.textContent = "";
+  status(title + ": connecting…");
+
+  // session.loader is replaced by session.reconnect(), which resets the
+  // CyberPi into its bootloader again (used to retry after a failed read).
+  const session = { transport: null, loader: null, mac: null };
+  session.reconnect = async () => {
+    if (session.transport) {
+      try { await session.transport.disconnect(); } catch {}
+    }
+    session.transport = new Transport(port, false);
+    session.loader = new ESPLoader({ transport: session.transport, baudrate: BAUD, romBaudrate: 115200,
+                                     terminal, serialOptions: { bufferSize: 64 * 1024 } });
+    await session.loader.main();
+    if (session.loader.chip.CHIP_NAME !== "ESP32")
+      throw new Error("This doesn't look like a CyberPi (chip is " + session.loader.chip.CHIP_NAME + ")");
+    session.mac = await session.loader.chip.readMac(session.loader);
+  };
+  try {
+    await session.reconnect();
+    await fn(session);
+    await session.loader.after("hard_reset");
+  } catch (e) {
+    status(title + " failed: " + (e && e.message ? e.message : e), "warn");
+    log("Error: " + (e && e.message ? e.message : e));
+  } finally {
+    try { await session.transport.disconnect(); } catch {}
+    busy = false;
+    updateButtons();
+  }
+}
+
+// ---- backup ------------------------------------------------------------------
+
+// Reads one chunk like esptool's read_flash: at most READ_IN_FLIGHT packets
+// unacknowledged, so the chip waits whenever the browser falls behind (the
+// library's readFlash lets it send everything at once and overflow buffers),
+// a short timeout, and the MD5 the chip sends at the end is checked.
+async function readChunk(loader, addr, size, onProgress) {
+  const int = (v) => loader._intToByteArray(v);
+  const pkt = loader._appendArray(loader._appendArray(int(addr), int(size)),
+                                  loader._appendArray(int(READ_PACKET), int(READ_IN_FLIGHT)));
+  await loader.checkCommand("read flash", loader.ESP_READ_FLASH, pkt);
+  const out = new Uint8Array(size);
+  let got = 0;
+  while (got < size) {
+    const p = await loader.transport.read(READ_TIMEOUT_MS);
+    if (got + p.length > size) throw new Error("read more data than asked for");
+    out.set(p, got);
+    got += p.length;
+    await loader.transport.write(int(got));
+    onProgress(got);
+  }
+  const digest = await loader.transport.read(READ_TIMEOUT_MS);
+  if (digest.length !== 16 || loader.toHex(digest) !== md5(out)) throw new Error("checksum mismatch");
+  return out;
+}
+
+$("backup").addEventListener("click", () => withBoard("Backup", async (session) => {
+  const data = new Uint8Array(FLASH_SIZE);
+  const t0 = performance.now();
+  for (let addr = 0; addr < FLASH_SIZE; addr += READ_CHUNK) {
+    status(`Backup: reading ${Math.round(addr / 1024)} of ${FLASH_SIZE / 1024} KB…`);
+    for (let attempt = 1; ; attempt++) {
+      try {
+        data.set(await readChunk(session.loader, addr, READ_CHUNK, (got) => progress(addr + got, FLASH_SIZE)), addr);
+        break;
+      } catch (e) {
+        log(`Reading at 0x${addr.toString(16)} failed (${e.message}), attempt ${attempt} of ${READ_RETRIES}.`);
+        if (attempt === READ_RETRIES) throw e;
+        status(`Backup: retrying at ${Math.round(addr / 1024)} KB…`);
+        await session.reconnect();
+      }
+    }
+  }
+  const loader = session.loader, mac = session.mac;
+  log(`Read 8 MB in ${Math.round((performance.now() - t0) / 1000)} s.`);
+  status("Backup: verifying…");
+  const ours = md5(data), chip = await loader.flashMd5sum(0, FLASH_SIZE);
+  log("File  md5: " + ours);
+  log("Flash md5: " + chip);
+  if (ours !== chip) throw new Error("the data read doesn't match the flash; try again");
+  const name = `cyberpi-backup-${mac.replaceAll(":", "")}-${new Date().toISOString().slice(0, 10)}.bin`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([data], { type: "application/octet-stream" }));
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  status("Backup verified and saved as " + name + ".", "ok");
+}));
+
+// ---- install -----------------------------------------------------------------
+
+async function loadLatestFirmware() {
+  try {
+    const res = await fetch("firmware/latest.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(res.status);
+    const info = await res.json();
+    const bin = await fetch("firmware/" + info.file);
+    if (!bin.ok) throw new Error(bin.status);
+    firmware = { name: info.file, data: new Uint8Array(await bin.arrayBuffer()) };
+    $("fw-info").textContent = `Firmware: ${info.file} (${info.release}, ${Math.round(firmware.data.length / 1024)} KB).`;
+  } catch {
+    $("fw-info").innerHTML = 'Couldn\'t load the latest firmware. Download <code>cyberdoom-*.bin</code> from the ' +
+      '<a href="https://github.com/the-parts-bin/cyberpi-doom/releases/latest">latest release</a> and choose it under ' +
+      '"Use a firmware file instead".';
+    $("fw-info").className = "note warn";
+  }
+  updateButtons();
+}
+
+$("fw-file").addEventListener("change", async () => {
+  if (!$("fw-file").files.length) return;
+  firmware = { name: $("fw-file").files[0].name, data: await readFile($("fw-file")) };
+  $("fw-info").textContent = `Firmware: ${firmware.name} (from file, ${Math.round(firmware.data.length / 1024)} KB).`;
+  $("fw-info").className = "note";
+  updateButtons();
+});
+
+$("wad").addEventListener("change", async () => {
+  wad = null;
+  const info = $("wad-info");
+  if ($("wad").files.length) {
+    const data = await readFile($("wad"));
+    const magic = String.fromCharCode(...data.slice(0, 4));
+    if (magic !== "IWAD") {
+      info.textContent = "That isn't a Doom IWAD file.";
+      info.className = "note warn";
+    } else if (data.length > WAD_MAX) {
+      info.textContent = "That WAD is too big for the CyberPi; it needs the shareware doom1.wad.";
+      info.className = "note warn";
+    } else {
+      wad = data;
+      const ok = md5(data) === WAD_MD5;
+      info.textContent = ok ? "Shareware doom1.wad v1.9: good." :
+        "This isn't the shareware v1.9 doom1.wad this port is tested with; it may not work.";
+      info.className = ok ? "note ok" : "note warn";
+    }
+  }
+  updateButtons();
+});
+$("skip-wad").addEventListener("change", updateButtons);
+
+$("install").addEventListener("click", () => withBoard("Install", async ({ loader }) => {
+  const files = [{ data: firmware.data, address: 0 }];
+  if (!$("skip-wad").checked) files.push({ data: wad, address: WAD_ADDR });
+  const total = files.reduce((n, f) => n + f.data.length, 0);
+  const before = files.map((f, i) => files.slice(0, i).reduce((n, g) => n + g.data.length, 0));
+  status("Install: writing…");
+  await loader.writeFlash({
+    fileArray: files,
+    flashMode: "keep", flashFreq: "keep", flashSize: "keep",
+    eraseAll: false,
+    compress: true,
+    reportProgress: (i, written) => progress(before[i] + written, total),
+    calculateMD5Hash: md5,
+  });
+  status("Installed and verified. The CyberPi restarts into Doom's start screen.", "ok");
+}));
+
+// ---- restore -----------------------------------------------------------------
+
+$("restore-file").addEventListener("change", updateButtons);
+
+$("restore").addEventListener("click", async () => {
+  const file = $("restore-file").files[0];
+  const data = await readFile($("restore-file"));
+  if (data.length !== FLASH_SIZE) {
+    status("That file isn't an 8 MB CyberPi backup.", "warn");
+    return;
+  }
+  if (!confirm("Restore " + file.name + "? This replaces everything on the CyberPi, including Doom and its saves.")) return;
+  withBoard("Restore", async ({ loader, mac }) => {
+    const fileMac = (file.name.match(/[0-9a-f]{12}/i) || [""])[0].toLowerCase();
+    const boardMac = mac.replaceAll(":", "").toLowerCase();
+    if (fileMac && fileMac !== boardMac &&
+        !confirm(`This backup came from another CyberPi (${fileMac}, this one is ${boardMac}). ` +
+                 "Its calibration and settings won't match. Restore anyway?")) {
+      throw new Error("cancelled");
+    }
+    status("Restore: writing…");
+    await loader.writeFlash({
+      fileArray: [{ data, address: 0 }],
+      flashMode: "keep", flashFreq: "keep", flashSize: "keep",
+      eraseAll: false,
+      compress: true,
+      reportProgress: (i, written, total) => progress(written, total),
+      calculateMD5Hash: md5,
+    });
+    status("Restored and verified. The CyberPi restarts into its original firmware.", "ok");
+  });
+});
+
+if (!("serial" in navigator)) {
+  $("unsupported").style.display = "block";
+  for (const b of document.querySelectorAll("button")) b.disabled = true;
+} else {
+  loadLatestFirmware();
+}
+</script>
+</body>
+</html>
