@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram" width="1000" height="205" viewBox="0 0 1000 205">
+  <title>Perspective-correct spans</title>
+<style>
+svg {
+  --bg: #fdfdfd;
+  --bg2: #f2f0ea;
+  --fg: #1b1d22;
+  --fg2: #4a4f5a;
+  --muted: #7a7f8a;
+  --rule: #dcd8ce;
+  --accent: #b4451f;
+  --link: #1f5fa8;
+  --code-bg: #efece4;
+
+  /* clock domains and memories, used by the diagrams */
+  --c-cpu: #2f62b0;
+  --c-sys: #2b8a4e;
+  --c-pix: #7048b8;
+  --c-usb: #b07a12;
+  --c-osc: #6b6f78;
+  --c-ram: #c99a06;
+  --c-ext: #a8452a;
+  --fill-cpu: #e8effa;
+  --fill-sys: #e6f4eb;
+  --fill-pix: #efe9f9;
+  --fill-usb: #f8f0dd;
+  --fill-ram: #fff3c4;
+  --fill-ext: #f9e6df;
+  --fill-box: #ffffff;
+}
+.diagram text { font-family: 'IBM Plex Sans', system-ui, sans-serif; fill: var(--fg); }
+.diagram .mono { font-family: 'IBM Plex Mono', monospace; }
+.diagram .t-title { font-weight: 600; font-size: 14px; }
+.diagram .t-sub { font-size: 11.5px; fill: var(--fg2); }
+.diagram .t-small { font-size: 10.5px; fill: var(--muted); }
+.diagram .t-freq { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; }
+.diagram .box { fill: var(--fill-box); stroke: var(--fg2); stroke-width: 1.2; }
+.diagram .ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.2; }
+.diagram .ext { fill: var(--fill-ext); stroke: var(--c-ext); stroke-width: 1.2; }
+.diagram .wire { stroke: var(--fg2); stroke-width: 1.6; fill: none; }
+.diagram .wire.thick { stroke-width: 3; }
+.diagram .arrowhead { fill: var(--fg2); }
+.diagram .dom { stroke-width: 1.6; stroke-dasharray: 6 4; }
+.diagram .d-cpu { fill: var(--fill-cpu); stroke: var(--c-cpu); }
+.diagram .d-sys { fill: var(--fill-sys); stroke: var(--c-sys); }
+.diagram .d-pix { fill: var(--fill-pix); stroke: var(--c-pix); }
+.diagram .d-usb { fill: var(--fill-usb); stroke: var(--c-usb); }
+.diagram .d-osc { fill: var(--bg2); stroke: var(--c-osc); }
+.diagram .k-cpu { fill: var(--c-cpu); }
+.diagram .k-sys { fill: var(--c-sys); }
+.diagram .k-pix { fill: var(--c-pix); }
+.diagram .k-usb { fill: var(--c-usb); }
+.diagram .k-osc { fill: var(--c-osc); }
+.diagram .s-cpu { stroke: var(--c-cpu); }
+.diagram .s-sys { stroke: var(--c-sys); }
+.diagram .s-pix { stroke: var(--c-pix); }
+.diagram .s-usb { stroke: var(--c-usb); }
+.diagram .s-osc { stroke: var(--c-osc); }
+.diagram .pkg { fill: var(--bg2); stroke: var(--fg2); stroke-width: 1.5; }
+.diagram .die { fill: var(--fill-box); stroke: var(--fg); stroke-width: 1.4; }
+.diagram .die-ram { fill: var(--fill-ram); stroke: var(--c-ram); stroke-width: 1.4; }
+.diagram .bar { fill: var(--accent); }
+.diagram .bar2 { fill: var(--fg2); opacity: 0.35; }
+.diagram .grid { stroke: var(--rule); stroke-width: 1; }
+</style>
+
+<style>
+.diagram .hole { fill: url(#hatch); stroke: var(--fg2); stroke-width: 1; }
+.diagram .px16 { fill: #cfe0f5; stroke: var(--c-cpu); stroke-width: 1.2; }
+.diagram .px8 { fill: var(--bg2); stroke: var(--fg2); stroke-width: 1.2; }
+.diagram .wall { fill: #8fa6c4; }
+.diagram .wall2 { fill: #6f88aa; }
+.diagram .floor { fill: #a39a88; }
+.diagram .sprite { fill: #c0563a; }
+.diagram .hud { fill: #2b8a4e; }
+</style>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead" /></marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#ffffff" /><line x1="0" y1="0" x2="0" y2="8" stroke="#b4451f" stroke-width="2" /></pattern>
+  </defs>
+<text x="20" y="26" class="t-title" text-anchor="start">One span: exact texture coordinates every 16 pixels, linear in between</text>
+<line x1="40" y1="150" x2="980" y2="150" class="grid" />
+<polyline points="40.0,150.0 55.5,144.6 71.0,139.6 86.5,135.0 102.0,130.7 117.5,126.7 133.0,122.9 148.5,119.4 164.0,116.1 179.5,112.9 195.0,110.0 210.5,107.2 226.0,104.6 241.5,102.1 257.0,99.7 272.5,97.5 288.0,95.4 303.5,93.3 319.0,91.4 334.5,89.5 350.0,87.8 365.5,86.1 381.0,84.5 396.5,82.9 412.0,81.4 427.5,80.0 443.0,78.6 458.5,77.3 474.0,76.0 489.5,74.8 505.0,73.6 520.5,72.5 536.0,71.4 551.5,70.3 567.0,69.3 582.5,68.3 598.0,67.4 613.5,66.5 629.0,65.6 644.5,64.7 660.0,63.8 675.5,63.0 691.0,62.2 706.5,61.5 722.0,60.7 737.5,60.0 753.0,59.3 768.5,58.6 784.0,57.9 799.5,57.3 815.0,56.7 830.5,56.1 846.0,55.5 861.5,54.9 877.0,54.3 892.5,53.8 908.0,53.2 923.5,52.7 939.0,52.2 954.5,51.7 970.0,51.2" fill="none" stroke="#7a7f8a" stroke-width="1.5" stroke-dasharray="4 3" />
+<polyline points="40.0,150.0 288.0,95.4 536.0,71.4 784.0,57.9 970.0,51.2" fill="none" stroke="#b4451f" stroke-width="2.2" />
+<circle cx="40.0" cy="150.0" r="4.5" fill="#b4451f" />
+<circle cx="288.0" cy="95.4" r="4.5" fill="#b4451f" />
+<circle cx="536.0" cy="71.4" r="4.5" fill="#b4451f" />
+<circle cx="784.0" cy="57.9" r="4.5" fill="#b4451f" />
+<circle cx="970.0" cy="51.2" r="4.5" fill="#b4451f" />
+<text x="60" y="175" class="t-sub" text-anchor="start">a dot: s = (s/z) ÷ (1/z), the divide through a 1,025-entry reciprocal table (8 clocks, pipelined)</text>
+<text x="60" y="193" class="t-sub" text-anchor="start">between dots: s and t step linearly, one pixel per clock (dashed: the exact curve)</text>
+</svg>

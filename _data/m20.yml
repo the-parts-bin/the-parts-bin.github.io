@@ -1,0 +1,14 @@
+# The m20 series, in reading order: drives the series bar and the pager in
+# _layouts/m20.html. Titles match each post's title.
+- url: /m20/
+  short: Overview
+  title: "m20: the same computer, on a bigger chip"
+- url: /m20/cpu/
+  short: CPU
+  title: "The CPU: floats, and faults the simulator never saw"
+- url: /m20/span-engine/
+  short: Span engine
+  title: "A span engine: Quake's inner loop in hardware"
+- url: /m20/games/
+  short: Games
+  title: "Porting notes: four games, one span engine"
