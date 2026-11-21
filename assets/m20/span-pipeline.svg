@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="diagram" width="1020" height="230" viewBox="0 0 1020 230">
-  <title>The span engine's pipeline</title>
+  <title>The 3D accelerator's pipeline</title>
 <style>
 svg {
   --bg: #fdfdfd;
@@ -78,43 +78,48 @@ svg {
     <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrowhead" /></marker>
     <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#ffffff" /><line x1="0" y1="0" x2="0" y2="8" stroke="#b4451f" stroke-width="2" /></pattern>
   </defs>
-<rect x="20" y="60" width="150" height="70" rx="5" class="box" />
-<text x="30" y="80" class="t-title">CPU</text>
-<text x="30" y="97" class="t-sub">registers, then</text>
-<text x="30" y="112" class="t-sub">spans {count, v, u}</text>
-<rect x="190" y="60" width="150" height="70" rx="5" class="box" />
-<text x="200" y="80" class="t-title">FIFO</text>
-<text x="200" y="97" class="t-sub">512 commands</text>
-<text x="200" y="112" class="t-sub">(a full one stalls)</text>
-<polyline points="170,95 190,95" class="wire" marker-end="url(#ah)" />
-<rect x="360" y="60" width="150" height="70" rx="5" class="box" />
-<text x="370" y="80" class="t-title">Span core</text>
-<text x="370" y="97" class="t-sub">s/z, t/z, 1/z: exact</text>
-<text x="370" y="112" class="t-sub">every 16 pixels</text>
-<polyline points="340,95 360,95" class="wire" marker-end="url(#ah)" />
-<rect x="530" y="60" width="150" height="70" rx="5" class="ram" />
-<text x="540" y="80" class="t-title">Texel cache</text>
-<text x="540" y="97" class="t-sub">2 KB direct-mapped</text>
-<text x="540" y="112" class="t-sub">a miss: 1 SDRAM line</text>
-<polyline points="510,95 530,95" class="wire" marker-end="url(#ah)" />
-<rect x="700" y="60" width="150" height="70" rx="5" class="box" />
-<text x="710" y="80" class="t-title">Palette + light</text>
-<text x="710" y="97" class="t-sub">RGB888 × lightmap</text>
-<text x="710" y="112" class="t-sub">(bilinear), DSPs</text>
-<polyline points="680,95 700,95" class="wire" marker-end="url(#ah)" />
-<rect x="870" y="60" width="150" height="70" rx="5" class="box" />
-<text x="880" y="80" class="t-title">Write buffers</text>
-<text x="880" y="97" class="t-sub">frame + z, 64 B</text>
-<text x="880" y="112" class="t-sub">lines, byte masks</text>
-<polyline points="850,95 870,95" class="wire" marker-end="url(#ah)" />
-<rect x="870" y="160" width="130" height="50" rx="5" class="ram" />
-<text x="880" y="180" class="t-title">SDRAM</text>
-<text x="880" y="197" class="t-sub">engine port</text>
-<polyline points="935,130 935,160" class="wire" marker-start="url(#ah)" marker-end="url(#ah)" />
-<polyline points="617,130 617,185 870,185" class="wire" marker-end="url(#ah)" />
-<text x="630" y="178" class="t-small" text-anchor="start">texture lines in</text>
+<rect x="10" y="60" width="128" height="70" rx="5" class="box" />
+<text x="19" y="80" class="t-title">CPU</text>
+<text x="19" y="97" class="t-sub">registers, then</text>
+<text x="19" y="112" class="t-sub">spans or edges</text>
+<rect x="154" y="60" width="128" height="70" rx="5" class="box" />
+<text x="163" y="80" class="t-title">FIFO</text>
+<text x="163" y="97" class="t-sub">512 commands</text>
+<text x="163" y="112" class="t-sub">(a full one stalls)</text>
+<polyline points="138,95 154,95" class="wire" marker-end="url(#ah)" />
+<rect x="298" y="60" width="128" height="70" rx="5" class="box" />
+<text x="307" y="80" class="t-title">Edge walk</text>
+<text x="307" y="97" class="t-sub">edges and clip in,</text>
+<text x="307" y="112" class="t-sub">a span per row out</text>
+<polyline points="282,95 298,95" class="wire" marker-end="url(#ah)" />
+<rect x="442" y="60" width="128" height="70" rx="5" class="box" />
+<text x="451" y="80" class="t-title">Span core</text>
+<text x="451" y="97" class="t-sub">s/z, t/z, 1/z: exact</text>
+<text x="451" y="112" class="t-sub">every 16 pixels</text>
+<polyline points="426,95 442,95" class="wire" marker-end="url(#ah)" />
+<rect x="586" y="60" width="128" height="70" rx="5" class="ram" />
+<text x="595" y="80" class="t-title">Texel cache</text>
+<text x="595" y="97" class="t-sub">8 KB, hashed index</text>
+<text x="595" y="112" class="t-sub">a miss: 1 line</text>
+<polyline points="570,95 586,95" class="wire" marker-end="url(#ah)" />
+<rect x="730" y="60" width="128" height="70" rx="5" class="box" />
+<text x="739" y="80" class="t-title">Palette + light</text>
+<text x="739" y="97" class="t-sub">2 banks, × lightmap</text>
+<text x="739" y="112" class="t-sub">(bilinear), DSPs</text>
+<polyline points="714,95 730,95" class="wire" marker-end="url(#ah)" />
+<rect x="874" y="60" width="128" height="70" rx="5" class="box" />
+<text x="883" y="80" class="t-title">Write buffers</text>
+<text x="883" y="97" class="t-sub">frame + z, 64 B lines</text>
+<text x="883" y="112" class="t-sub">depth test: z cache</text>
+<polyline points="858,95 874,95" class="wire" marker-end="url(#ah)" />
+<rect x="874" y="160" width="128" height="50" rx="5" class="ram" />
+<text x="883" y="180" class="t-title">SDRAM</text>
+<text x="883" y="197" class="t-sub">its own port</text>
+<polyline points="938,130 938,160" class="wire" marker-start="url(#ah)" marker-end="url(#ah)" />
+<polyline points="650,130 650,185 874,185" class="wire" marker-end="url(#ah)" />
+<text x="660" y="178" class="t-small" text-anchor="start">texture lines in</text>
 <text x="20" y="175" class="t-sub" text-anchor="start">Per surface (once): the planes s/z, t/z and 1/z with their exponents, the texture</text>
-<text x="20" y="193" class="t-sub" text-anchor="start">(power-of-two sizes, wrapping), the lightmap (up to 31 × 31 samples, 2ᵏ texels apart).</text>
-<text x="20" y="211" class="t-sub" text-anchor="start">Per span: one 32-bit word. Per pixel: one clock while the texels hit the cache.</text>
-<text x="20" y="30" class="t-title" text-anchor="start">The span engine's pipeline: cpu_clk, 54 MHz</text>
+<text x="20" y="193" class="t-sub" text-anchor="start">(powers of two, wrapping or in 8 × 8 tiles, or any width), the lightmap (up to 31 × 31 samples, 2ᵏ texels apart).</text>
+<text x="20" y="211" class="t-sub" text-anchor="start">Per span: one 32-bit word, or per face an EDGE command and its edges. Per pixel: one clock while the texels hit the cache.</text>
+<text x="20" y="30" class="t-title" text-anchor="start">The 3D accelerator's pipeline: cpu_clk, 60 MHz</text>
 </svg>

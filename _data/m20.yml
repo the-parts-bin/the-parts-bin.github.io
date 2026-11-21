@@ -6,9 +6,9 @@
 - url: /m20/cpu/
   short: CPU
   title: "The CPU: floats, and faults the simulator never saw"
-- url: /m20/span-engine/
-  short: Span engine
-  title: "A span engine: Quake's inner loop in hardware"
+- url: /m20/3d-accelerator/
+  short: 3D accelerator
+  title: "A 3D accelerator: perspective, light and depth at a pixel per clock"
 - url: /m20/games/
   short: Games
-  title: "Porting notes: four games, one span engine"
+  title: "Porting notes: four games, one 3D accelerator"

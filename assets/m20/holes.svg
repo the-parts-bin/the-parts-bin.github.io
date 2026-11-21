@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="diagram" width="900" height="280" viewBox="0 0 900 280">
-  <title>Sharing a frame between the CPU and the span engine</title>
+  <title>Sharing a frame between the CPU and the 3D accelerator</title>
 <style>
 svg {
   --bg: #fdfdfd;
@@ -103,16 +103,16 @@ svg {
 <rect x="628" y="190" width="60" height="9" class="hud" />
 <rect x="820" y="190" width="50" height="9" class="hud" />
 <text x="20" y="36" class="t-title" text-anchor="start">CPU: the 8 bpp canvas</text>
-<text x="320" y="36" class="t-title" text-anchor="start">Engine: RGB565, in the frame shown</text>
+<text x="320" y="36" class="t-title" text-anchor="start">Accelerator: RGB565, in the frame shown</text>
 <text x="620" y="36" class="t-title" text-anchor="start">Composed: the frame on screen</text>
-<text x="20" y="235" class="t-sub" text-anchor="start">Under every engine span the canvas gets holes</text>
+<text x="20" y="235" class="t-sub" text-anchor="start">Under every accelerator span the canvas gets holes</text>
 <text x="20" y="251" class="t-sub" text-anchor="start">(colour 255); sprites, transparent walls and</text>
 <text x="20" y="267" class="t-sub" text-anchor="start">the HUD are drawn as before.</text>
-<text x="320" y="235" class="t-sub" text-anchor="start">The engine draws the opaque textured walls</text>
+<text x="320" y="235" class="t-sub" text-anchor="start">The accelerator draws the opaque textured walls</text>
 <text x="320" y="251" class="t-sub" text-anchor="start">straight into the display buffer; the CPU</text>
 <text x="320" y="267" class="t-sub" text-anchor="start">never waits for it until the frame is done.</text>
 <text x="620" y="235" class="t-sub" text-anchor="start">The canvas's pixels that aren't holes go over</text>
-<text x="620" y="251" class="t-sub" text-anchor="start">the engine's, through the palette: whichever</text>
+<text x="620" y="251" class="t-sub" text-anchor="start">the accelerator's, through the palette: whichever</text>
 <text x="620" y="267" class="t-sub" text-anchor="start">drew a pixel last wins.</text>
 <polyline points="285,130 315,130" class="wire" marker-end="url(#ah)" />
 <polyline points="585,130 615,130" class="wire" marker-end="url(#ah)" />
