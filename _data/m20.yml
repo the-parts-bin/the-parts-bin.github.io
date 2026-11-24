@@ -2,7 +2,7 @@
 # _layouts/m20.html. Titles match each post's title.
 - url: /m20/
   short: Overview
-  title: "m20: the same computer, on a bigger chip"
+  title: "A retro-style computer on the Tang Nano 20k"
 - url: /m20/cpu/
   short: CPU
   title: "The CPU: floats, and faults the simulator never saw"

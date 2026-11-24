@@ -27,7 +27,7 @@ The division is a pipeline of its own: leading zeros, a 1,025-entry reciprocal t
 
 {% include m20/figure.html src="span-pipeline.svg" wide=true
    alt="The 3D accelerator's pipeline: CPU, FIFO, edge walk, span core, texel cache, palette and light, write buffers, SDRAM"
-   caption="Everything runs on the CPU's 60 MHz clock; only the texel cache's fill port and the write-back register are on the SDRAM controller's 120 MHz side." %}
+   caption="Everything runs on the CPU's 60 MHz clock; only the texel cache's and the lightmap's fill ports, the depth cache's SDRAM side and the write-back register are on the SDRAM controller's 120 MHz side." %}
 
 - **Commands** go through a 512-entry FIFO, as `{register, value}` pairs written to an I/O window. A surface is a few register writes (the three planes with their exponents, the texture, its extents), then its rows: one 32-bit word per span, `{count, v, u}`, up to 1024 pixels long, anywhere on a 1024 × 512 screen, or an EDGE command that has the accelerator make the rows itself. A register write waits until the pixels in flight are done, so a new surface can't overtake the old one's spans. The CPU only stalls if the FIFO is full.
 - **The edge walk** sits at the FIFO's head. An EDGE command gives it a face's left and right edges, each an x and a step per row in 16.16 fixed point, a range of rows and a clip window. It turns each row into a span command, from whichever edge is further left to the other, clipped to the window, and slips it in ahead of the next FIFO entry, a row every few clocks, well ahead of the pixels. Only edges that change need sending: at a vertex partway down a polygon the CPU sends the one new edge, and the other carries on from where it got to. The CPU still does each polygon's setup, the edges' slopes and the face's planes; what it no longer does is anything per row, and a face of a hundred rows costs a handful of FIFO words instead of a hundred.
@@ -42,7 +42,7 @@ The accelerator runs on the CPU's clock. At the SDRAM's 120 MHz its control path
 
 Quake's renderer doesn't light pixels as it draws them. It builds a *surface cache*: for each visible surface, a copy of its texture with the lightmap baked in, at the right mip level, and the span drawer reads from that. Building those surfaces on the CPU took a good share of the frame.
 
-So the accelerator learned to light pixels itself, and it lights every game's faces the same way. In lit mode, the span reads the texture directly (power-of-two sizes, wrapping by mask) and takes the light from the surface's lightmap, which the accelerator loads into block RAM itself (up to 31 × 31 samples, 2<sup>k</sup> texels apart). The light is bilinear at each segment's ends and stepped linearly in between, like the texture coordinates. Then the palette's colour is multiplied by the brightness, where 128 means as-is and 256 is twice as bright. Colours 224 to 255 stay unlit: those are Quake's fullbright colours, the lamps and lava.
+So the accelerator learned to light pixels itself, and it lights every game's faces the same way. In lit mode, the span reads the texture directly (power-of-two sizes wrapping by mask, optionally stored as 8 × 8 tiles of 64 bytes so that a cache line holds a square of texels, as Tomb Raider's pages are; or any width, below) and takes the light from the surface's lightmap, which the accelerator loads into block RAM itself (up to 31 × 31 samples, 2<sup>k</sup> texels apart). The light is bilinear at each segment's ends and stepped linearly in between, like the texture coordinates. Then the palette's colour is multiplied by the brightness, where 128 means as-is and 256 is twice as bright. Colours 224 to 255 stay unlit: those are Quake's fullbright colours, the lamps and lava.
 
 That's GL-style lighting rather than Quake's colormap, multiplying RGB instead of picking a darker palette entry. It looks slightly different from the original renderer, but it removes the surface cache's build entirely, and it made the frame RGB565 for free. The video engine doubles 16-bit lines horizontally the same way it does 8-bit ones.
 
@@ -71,7 +71,7 @@ The accelerator grew as the other games needed things:
 - **Edges.** The edge walk (above) came from Tomb Raider, where it halved the FIFO words and took all the per-row work off the CPU. Descent and System Shock now hand their own mappers' rows over the same way, and Quake's models use it for every triangle.
 - **A depth test**, with the z cache, and a skip for texel 0 (the see-through pixels), for Tomb Raider's faces and Quake's models.
 - **Lit textures of any width.** Lit textures used to be powers of two, wrapping by mask, and Quake's model skins aren't. A width register now puts the rows any distance apart, through the same multiply-add as the unlit offsets, so the skins are read where Quake loaded them. Padding them to powers of two instead cost 0.7 MB, which pushed models out of Quake's cache.
-- **One address stream for depth.** Part of the room for 60 MHz came from the depth buffer: inside the accelerator a depth goes by its pixel's frame address, and the depth buffer's offset from the frame is only added as a line leaves for SDRAM. So the depth buffer has to sit a multiple of 2 KB away from the frame, with the same stride, and a depth stride of zero means no depth writes at all.
+- **One address stream for depth.** Part of the room for 60 MHz came from the depth buffer: inside the accelerator a depth goes by its pixel's frame address, and the depth buffer's offset from the frame is only added as a line leaves for SDRAM. So the depth buffer has to sit a multiple of 2 KB away from the frame, with the same stride, and without the depth test a depth stride of zero means no depth writes.
 
 ## Using it from software
 
@@ -81,6 +81,7 @@ The accelerator writes SDRAM behind the CPU's back, so a program has to keep the
 - **After:** any part of the frame the CPU might read or write must not be sitting in its cache with stale contents (`cbo.flush` before the accelerator writes there, or a wait for the accelerator before the CPU touches it).
 - **Waiting** is a status register: the accelerator is busy until everything it was given is drawn and written back.
 - **The buffer addresses only while it's idle.** The frame and depth base registers take effect at once. Quake once moved the frame base to the other display buffer while the accelerator was still writing back the last frame's model depths, which then went a display buffer away from the depth buffer, into Quake's own variables: traps in the client and sound code within minutes of play, and nothing in the emulator, which is never busy.
+- **The depth test survives resets.** Its register is cleared only at power-up, so a program that never set it inherited the last one's: Descent and System Shock, which draw without depth, hung when started after Quake or Tomb Raider, the accelerator writing depths into their memory. The firmware now clears it before starting each program, and the games set it themselves.
 
 Counters for pixels drawn, texel cache misses and busy cycles make it easy to see whether the accelerator or the CPU is the limit, and in practice it's usually the CPU.
 
@@ -113,7 +114,7 @@ The accelerator is as fast as its texels arrive, and the texel cache was small a
 
 </div>
 
-Since then the cache grew to 8 KB with a hashed index; textures read across their rows still miss 10 to 40%. It also used to write depth always, which only Quake needed then; now a depth stride of zero switches the writes off. A two-way cache is the obvious next change. In none of the games is the accelerator the bottleneck yet, though: it's busy 25 to 40% of the time, and the rest of each frame is the CPU's.
+Since then the cache grew to 8 KB with a hashed index; textures read across their rows still miss 10 to 40%. It also used to write depth always, which only Quake needed then; now, without the depth test, a depth stride of zero switches the writes off. A two-way cache is the obvious next change. In none of the games is the accelerator the bottleneck yet, though: it's busy 25 to 40% of the time, and the rest of each frame is the CPU's.
 
 ## One accelerator, four renderers
 
