@@ -2,7 +2,7 @@
 layout: m20
 title: "A 3D accelerator: perspective, light and depth at a pixel per clock"
 description: "m20's 3D accelerator: it rasterizes polygons from their edges, maps textures with perspective, lights them from a lightmap and tests depth, at one pixel per clock; checked bit for bit against a C model, and used by four games with four different renderers."
-date: 2026-11-09 09:02:00 +0100
+date: 2026-11-24 09:02:00 +0100
 series: m20
 part: 3
 permalink: /m20/3d-accelerator/
