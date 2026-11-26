@@ -1,0 +1,23 @@
+# The kr260-pc series, in reading order: drives the series bar and the pager
+# in _layouts/kr260.html. Titles match each post's title.
+- url: /kr260-pc/
+  short: Overview
+  title: "Six PCs in one FPGA board: from the XT to the Pentium"
+- url: /kr260-pc/xt/
+  short: XT
+  title: "The XT: an 8088 with CGA and Hercules"
+- url: /kr260-pc/xt-exact/
+  short: Exact XT
+  title: "The cycle-exact XT: Intel's microcode and a CGA to match"
+- url: /kr260-pc/at/
+  short: AT
+  title: "The AT: an 80286 with an EGA"
+- url: /kr260-pc/386/
+  short: "386"
+  title: "The 386: caches, a local bus and a VGA"
+- url: /kr260-pc/486/
+  short: "486"
+  title: "The 486: an ET4000, a Sound Blaster 16 and Windows 95"
+- url: /kr260-pc/pentium/
+  short: Pentium
+  title: "The Pentium-class PC: PCI, an S3 Trio64V+ and a Voodoo"
